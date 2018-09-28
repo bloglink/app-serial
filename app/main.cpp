@@ -8,6 +8,8 @@
 *******************************************************************************/
 #include <QApplication>
 #include <QTranslator>
+#include <QFile>
+
 #include "appserial.h"
 
 int main(int argc, char *argv[])
@@ -21,6 +23,13 @@ int main(int argc, char *argv[])
     QTranslator qtBase;
     qtBase.load(":/qtbase_zh_CN.qm");
     a.installTranslator(&qtBase);
+
+    QFile file;
+    QString qss;
+    file.setFileName(":/qss_black.css");
+    file.open(QFile::ReadOnly);
+    qss = QLatin1String(file.readAll());
+    qApp->setStyleSheet(qss);
 
     AppSerial w;
     w.show();

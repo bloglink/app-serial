@@ -9,29 +9,24 @@
 #ifndef APPSERIAL_H
 #define APPSERIAL_H
 
-#include <QMainWindow>
 #include <QDebug>
 #include <QLabel>
 #include <QTimer>
 #include <QWidget>
 #include <QLayout>
+#include <QDateTime>
 #include <QListView>
 #include <QLineEdit>
 #include <QComboBox>
 #include <QCheckBox>
 #include <QTextEdit>
 #include <QSettings>
-#include <QHeaderView>
+#include <QHideEvent>
 #include <QPushButton>
-#include <QTableWidget>
-#include <QElapsedTimer>
-#include <QTableWidgetItem>
+#include <QMainWindow>
+#include <QApplication>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
-
-#include <QHideEvent>
-#include <QApplication>
-#include <QDateTime>
 
 #ifndef __linux__
 #include <qt_windows.h>
@@ -43,52 +38,43 @@ class AppSerial : public QMainWindow
 
 public:
     explicit AppSerial(QWidget *parent = 0);
-    ~AppSerial();
 private slots:
     void initUI();
-    void initSkin();
     void initTitle();
     void initLayout();
-    void initRecvBar();
-    void initSendBar();
+    void initRecvText();
+    void initRecvPort();
+    void initRecvItem();
+    void initSendView();
     void initSettings();
     void saveSettings();
     void openSerialDev();
-    void recvSerialDev();
+    void sendSerialDat();
     void sendSerialDev();
-    void sendSerialCurr();
-    void sendSerialList();
-    void stopSerialLoop();
+    void recvSerialDev();
     void sendSerialMsg(QByteArray msg);
     void display(QByteArray msg);
-    void appendCurrentItem();
-    void deleteCurrentItem();
-    void updateCurrentItem(int r, int c);
+    QByteArray crc16(QByteArray msg);
+    virtual void showEvent(QShowEvent *e);
     virtual void hideEvent(QHideEvent *e);
 private:
-    QGridLayout *layout;
-    QTextEdit *EditGetText;
-    QComboBox *boxDevPorts;
-    QComboBox *boxBaudRate;
-    QComboBox *boxNoParity;
-    QComboBox *boxDataBits;
-    QComboBox *boxStopBits;
-    QCheckBox *boxAutoSpace;
-    QCheckBox *boxGetToHEX;
-    QLineEdit *EditPutTime;
-    QLineEdit *EditPutRate;
-    QCheckBox *boxLoopSend;
-    QCheckBox *boxPutToHEX;
-    QLineEdit *EditPutText;
-    QTableWidget *tabList;
-
-    QStringList tabTexts;
-    QStringList tabNotes;
+    QHBoxLayout *toplayout;
+    QHBoxLayout *lowlayout;
+    QTextEdit *textRecv;
+    QCheckBox *boxSpace;
+    QCheckBox *boxHex16;
+    QCheckBox *boxCrc16;
+    QCheckBox *boxEnter;
+    QList<QComboBox*> boxRecver;
+    QList<QLineEdit*> boxSender;
+    QList<QPushButton*> btnSender;
+    QList<QLineEdit*> boxReturn;
+    QList<QLineEdit*> boxDelays;
+    QMap<int, int> wait;
+    QMap<int, int> isRecv;
 
     QSerialPort *com;
     QTimer *timer;
-    int timeOut;
-    int sendOut;
 };
 
 #endif // APPSERIAL_H
