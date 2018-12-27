@@ -14,6 +14,8 @@
 #include <QTimer>
 #include <QWidget>
 #include <QLayout>
+#include <QFileDialog>
+
 #include <QDateTime>
 #include <QListView>
 #include <QLineEdit>
@@ -21,12 +23,24 @@
 #include <QCheckBox>
 #include <QTextEdit>
 #include <QSettings>
+#include <QTableView>
 #include <QHideEvent>
 #include <QPushButton>
 #include <QMainWindow>
 #include <QApplication>
+#include <QFontDatabase>
+#include <QHeaderView>
+#include <QMessageBox>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
+
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QSqlDatabase>
+#include <QSqlTableModel>
+
+#include "boxqmodel.h"
+#include "boxqitems.h"
 
 #ifndef __linux__
 #include <qt_windows.h>
@@ -42,39 +56,48 @@ private slots:
     void initUI();
     void initTitle();
     void initLayout();
-    void initRecvText();
-    void initRecvPort();
-    void initRecvItem();
-    void initSendView();
+    void initBoxTop();
+    void initBoxMid();
+    void initSqlite();
+    void initBoxPort();
+    void initTxtPort();
+    void initBoxSend();
+    void initButtons();
     void initSettings();
     void saveSettings();
+    void displayExtern();
     void openSerialDev();
     void sendSerialDat();
-    void sendSerialDev();
+    void sendSerialMsg();
+    void openSerialFile();
+    void sendSerialFile();
+    void saveSerialFile();
+    void sendSerialTab(QModelIndex index);
+    void readreadySlot();
     void recvSerialDev();
-    void sendSerialMsg(QByteArray msg);
-    void display(QByteArray msg);
     QByteArray crc16(QByteArray msg);
     virtual void showEvent(QShowEvent *e);
     virtual void hideEvent(QHideEvent *e);
 private:
     QHBoxLayout *toplayout;
+    QHBoxLayout *midlayout;
     QHBoxLayout *lowlayout;
-    QTextEdit *textRecv;
-    QCheckBox *boxSpace;
-    QCheckBox *boxHex16;
-    QCheckBox *boxCrc16;
-    QCheckBox *boxEnter;
-    QList<QComboBox*> boxRecver;
-    QList<QLineEdit*> boxSender;
-    QList<QPushButton*> btnSender;
-    QList<QLineEdit*> boxReturn;
-    QList<QLineEdit*> boxDelays;
-    QMap<int, int> wait;
-    QMap<int, int> isRecv;
+    QGridLayout *btnlayout;
+    QPushButton *btnOpen;
+    QTextEdit *textrecv;
+    QTextEdit *textsend;
+    QTableView *view;
+    BoxQModel *mExtern;
+    BoxQModel *mSerial;
+    QMap<QString, QComboBox*> combobox;
+    QMap<QString, QCheckBox*> checkbox;
+    QMap<QString, QLineEdit*> lineedit;
+    QVariantMap recver;
+    QString stringSend;
 
     QSerialPort *com;
-    QTimer *timer;
+    QTimer *timerRead;
+    QTimer *timerSend;
 };
 
 #endif // APPSERIAL_H

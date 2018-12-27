@@ -9,28 +9,33 @@
 #include <QApplication>
 #include <QTranslator>
 #include <QFile>
+#include <QDir>
 
 #include "appserial.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
-    QTranslator qtTran;
-    qtTran.load(":/qt_zh_CN.qm");
-    a.installTranslator(&qtTran);
-
-    QTranslator qtBase;
-    qtBase.load(":/qtbase_zh_CN.qm");
-    a.installTranslator(&qtBase);
-
     QFile file;
-    QString qss;
-    file.setFileName(":/qss_black.css");
-    file.open(QFile::ReadOnly);
-    qss = QLatin1String(file.readAll());
-    qApp->setStyleSheet(qss);
-
+    file.setFileName("./qrc/qt_zh_CN.qm");
+    if (file.exists()) {
+        QTranslator qtTran;
+        if (qtTran.load("./qrc/qt_zh_CN.qm")) {
+            a.installTranslator(&qtTran);
+        }
+    }
+    file.setFileName("./qrc/qtbase_zh_CN.qm");
+    if (file.exists()) {
+        QTranslator qtBase;
+        if (qtBase.load("./qrc/qtbase_zh_CN.qm"))
+            a.installTranslator(&qtBase);
+    }
+    file.setFileName("./qss/darkBlack.qss");
+    if (file.exists()) {
+        if (file.open(QFile::ReadOnly)) {
+            qApp->setStyleSheet(QLatin1String(file.readAll()));
+        }
+    }
     AppSerial w;
     w.show();
 

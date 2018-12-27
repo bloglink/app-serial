@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets serialport
 
@@ -14,12 +14,15 @@ TEMPLATE = app
 RC_FILE += qrc/appsource.rc
 
 HEADERS += \
-    app/appserial.h
+    app/appserial.h \
+    app/boxqitems.h \
+    app/boxqmodel.h
 
 SOURCES += \
     app/appserial.cpp \
-    app/main.cpp
+    app/main.cpp \
+    app/boxqitems.cpp \
+    app/boxqmodel.cpp
 
-RESOURCES += \
-    qrc/appsource.qrc
+RESOURCES +=
 
